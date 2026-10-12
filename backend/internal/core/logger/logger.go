@@ -34,6 +34,9 @@ type Logger struct {
 	lastError  string
 }
 
+// noColor 为 true 时不输出 ANSI 颜色码（设置环境变量 NO_COLOR，青龙日志里更干净）。
+var noColor = os.Getenv("NO_COLOR") != ""
+
 // NewLogger 创建日志记录器
 func NewLogger(level LogLevel) *Logger {
 	return &Logger{
@@ -45,7 +48,12 @@ func NewLogger(level LogLevel) *Logger {
 // log 内部日志方法
 func (l *Logger) log(level LogLevel, color string, args ...interface{}) {
 	timestamp := time.Now().Format("2006-01-02 15:04:05")
-	message := fmt.Sprintf("%s [%s] %s", color, timestamp, formatArgs(args...))
+	if noColor {
+		color = ""
+	} else {
+		color += " "
+	}
+	message := fmt.Sprintf("%s[%s] %s", color, timestamp, formatArgs(args...))
 
 	fmt.Fprintln(l.output, message)
 }

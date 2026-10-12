@@ -126,3 +126,4 @@ frontend/src/api/generated/
 # Python local caches
 **/__pycache__/
 *.py[cod]
+caiyun_data/
